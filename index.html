@@ -2,46 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Monika Makeovers Quotation</title>
+  <title>Monika Makeovers Quotation Generator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="wrap">
-    <div class="panel" id="panel">
-      <div class="sec-head">✦ Build Quotation</div>
+  <nav>
+    <img src="assets/logo.png" alt="Logo">
+    <ul>
+      <li><a href="#client">Client</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#preview">Preview</a></li>
+    </ul>
+  </nav>
 
-      <div class="fld">
-        <div class="lbl">Client Name</div>
-        <input type="text" id="clientName" placeholder="e.g. Priya Sharma" />
-      </div>
+  <section id="client">
+    <h2>Client Details</h2>
+    <label>Name</label><input type="text" id="clientName">
+    <label>Date</label><input type="date" id="eventDate">
+    <label>Location</label><input type="text" id="eventLocation">
+    <label>Package Inclusions</label><textarea id="packageInclusions"></textarea>
+  </section>
 
-      <div class="fld">
-        <div class="lbl">Phone / WhatsApp</div>
-        <input type="text" id="clientPhone" placeholder="+91 98765 43210" />
-      </div>
+  <section id="services">
+    <h2>Select Services</h2>
+    <label><input type="checkbox" data-service="Full Look (HD)" data-rate="7500"> Full Look (HD)</label>
+    <label><input type="checkbox" data-service="Only Makeup (HD)" data-rate="6000"> Only Makeup (HD)</label>
+    <label><input type="checkbox" data-service="Hairstyle" data-rate="1500"> Hairstyle</label>
+    <label><input type="checkbox" data-service="Draping" data-rate="800"> Draping</label>
+    <label><input type="checkbox" data-service="Makeup + Draping" data-rate="6500"> Makeup + Draping</label>
+    <label><input type="checkbox" data-service="Hair + Draping" data-rate="2000"> Hair + Draping</label>
+  </section>
 
-      <div class="fld">
-        <div class="lbl">Special Note</div>
-        <textarea id="globalNote" rows="2" placeholder="Conveyance, advance, terms..."></textarea>
-      </div>
-
-      <div>
-        <div class="sec-head">Events & Dates</div>
-        <div id="datesList"></div>
-        <button class="add-btn" onclick="addDate()">+ Add Date</button>
-      </div>
-
-      <button class="gen-btn" onclick="generateQuote()">✦ Generate Quotation</button>
+  <section id="pricing">
+    <h2>Pricing</h2>
+    <table id="pricingTable">
+      <tr><th>Service</th><th>Rate</th><th>Quantity</th><th>Total</th></tr>
+    </table>
+    <div class="totals">
+      <p>Subtotal: <span id="subtotal">0</span></p>
+      <p>Discount: <input type="number" id="discount" value="0"></p>
+      <p><strong>Grand Total: <span id="grandTotal">0</span></strong></p>
     </div>
+    <button id="generateBtn">Generate Quotation</button>
+  </section>
 
-    <div class="preview" id="previewArea">
-      <div class="empty">
-        <div style="font-size:28px;margin-bottom:8px">💄</div>
-        Add events & click <br><em>Generate Quotation</em>
-      </div>
-    </div>
-  </div>
+  <section id="preview" style="display:none;">
+    <h2>Quotation Preview</h2>
+    <div id="quotationPreview"></div>
+    <button id="downloadBtn">Download PDF</button>
+    <button id="editBtn">Go Back & Edit</button>
+  </section>
 
+  <!-- PDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
