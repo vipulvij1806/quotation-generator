@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Monika Makeovers Quotation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="assets/logo.png" alt="Monika Makeovers Logo">
+    <h1>Quotation</h1>
+  </header>
+
+  <section class="client-details">
+    <h2>Client Details</h2>
+    <label>Name</label><input type="text" id="clientName">
+    <label>Date</label><input type="date" id="eventDate">
+    <label>Location</label><input type="text" id="eventLocation">
+    <label>Package Inclusions</label><textarea id="packageInclusions"></textarea>
+  </section>
+
+  <section class="services">
+    <h2>Services</h2>
+    <label><input type="checkbox" data-service="Bridal Base" data-rate="15000"> Bridal Package</label>
+    <label><input type="checkbox" data-service="Guest Basic" data-rate="2000"> Guest Basic</label>
+    <label><input type="checkbox" data-service="Guest HD" data-rate="3000"> Guest HD</label>
+    <label><input type="checkbox" data-service="Special Guest" data-rate="4000"> Special Guest</label>
+    <label><input type="checkbox" data-service="Close Relatives" data-rate="2500"> Close Relatives</label>
+    <label><input type="checkbox" data-service="Salon Setup" data-rate="10000"> Salon Setup</label>
+    <label><input type="checkbox" data-service="Per Artist" data-rate="5000"> Per Artist</label>
+  </section>
+
+  <section class="pricing">
+    <h2>Pricing</h2>
+    <table id="pricingTable">
+      <tr><th>Service</th><th>Rate</th><th>Quantity</th><th>Total</th></tr>
+    </table>
+  </section>
+
+  <div class="totals">
+    <p>Subtotal: <span id="subtotal">0</span></p>
+    <p>Discount: <input type="number" id="discount" value="0"></p>
+    <p><strong>Grand Total: <span id="grandTotal">0</span></strong></p>
+  </div>
+
+  <button onclick="window.print()">Download PDF</button>
+
+  <footer>
+    <p>Advance Payment: 50% required to confirm booking</p>
+    <p>Terms & Conditions apply | Valid for 7 days</p>
+    <p>Contact via WhatsApp / Instagram QR</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
