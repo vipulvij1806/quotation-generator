@@ -8,29 +8,13 @@
 <body>
   <div class="container">
 
-    <!-- Page 1 -->
+    <!-- Page 1: Client Details -->
     <div class="page" id="page1">
       <h2>Client Details</h2>
-      <div class="fld">
-        <label>Client Name</label>
-        <input type="text" id="clientName" placeholder="e.g. Priya Sharma">
-      </div>
-
-      <div class="fld">
-        <label>Phone</label>
-        <input type="text" id="clientPhone" placeholder="+91 98765 43210">
-      </div>
-
-      <div class="fld">
-        <label>Special Note</label>
-        <textarea id="specialNote" rows="2" placeholder="Advance, conveyance, terms..."></textarea>
-      </div>
-
-      <div class="fld">
-        <label>Location</label>
-        <input type="text" id="location" placeholder="e.g. Jaipur">
-      </div>
-
+      <div class="fld"><label>Client Name</label><input type="text" id="clientName"></div>
+      <div class="fld"><label>Phone</label><input type="text" id="clientPhone"></div>
+      <div class="fld"><label>Special Note</label><textarea id="specialNote"></textarea></div>
+      <div class="fld"><label>Location</label><input type="text" id="location"></div>
       <div class="fld">
         <label>Select Events</label>
         <div class="checkbox-group">
@@ -40,22 +24,56 @@
           <label><input type="checkbox" value="Reception"> Reception</label>
         </div>
       </div>
-
       <button class="next-btn" onclick="goToPage(2)">Next ➝</button>
     </div>
 
-    <!-- Page 2 (placeholder for now) -->
+    <!-- Page 2: Package Selection -->
     <div class="page hidden" id="page2">
-      <h2>Package Details</h2>
-      <p>Here you’ll add package inclusions, pricing, etc.</p>
+      <h2>Package Selection</h2>
+      <p>Select services for HD or Basic packages:</p>
+      <div class="fld">
+        <label><input type="checkbox" value="Full Look (HD) ₹7500"> Full Look (HD)</label>
+        <label><input type="checkbox" value="Only Makeup (HD) ₹6000"> Only Makeup (HD)</label>
+        <label><input type="checkbox" value="Hairstyle ₹1500"> Hairstyle</label>
+        <label><input type="checkbox" value="Draping ₹800"> Draping</label>
+      </div>
+      <div class="fld">
+        <label><input type="checkbox" value="Full Look (Basic) ₹4500"> Full Look (Basic)</label>
+        <label><input type="checkbox" value="Only Makeup (Basic) ₹3000"> Only Makeup (Basic)</label>
+        <label><input type="checkbox" value="Hairstyle ₹1500"> Hairstyle</label>
+        <label><input type="checkbox" value="Draping ₹800"> Draping</label>
+      </div>
       <button class="back-btn" onclick="goToPage(1)">⬅ Back</button>
       <button class="next-btn" onclick="goToPage(3)">Next ➝</button>
     </div>
 
-    <!-- More pages can be added similarly -->
+    <!-- Page 3: Inclusions & Exclusions -->
+    <div class="page hidden" id="page3">
+      <h2>Inclusions & Exclusions</h2>
+      <h3>Inclusions</h3>
+      <ul>
+        <li>Makeup</li><li>Hairstyle</li><li>Draping</li><li>Lenses</li><li>False Lashes</li>
+      </ul>
+      <h3>Exclusions</h3>
+      <ul>
+        <li>Conveyance Extra</li>
+        <li>Hair Extension: ₹1000–₹1500</li>
+        <li>Fresh Flowers (on request)</li>
+        <li>Hair Accessories (printed price)</li>
+      </ul>
+      <button class="back-btn" onclick="goToPage(2)">⬅ Back</button>
+      <button class="next-btn" onclick="goToPage(4)">Next ➝</button>
+    </div>
+
+    <!-- Page 4: Summary -->
+    <div class="page hidden" id="page4">
+      <h2>Quotation Summary</h2>
+      <div id="summary"></div>
+      <button class="back-btn" onclick="goToPage(3)">⬅ Back</button>
+      <button class="next-btn" onclick="downloadPDF()">Download PDF</button>
+    </div>
 
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
