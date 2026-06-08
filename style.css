@@ -1,26 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Cormorant+Garamond:wght@400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --rose:#e8a0b0; --rose-light:#f5dde3; --rose-pale:#fdf0f3;
+  --teal:#3a7d8c; --teal-dark:#2b6070; --teal-bg:#e0f0f3;
+  --gold:#c9a96e;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #fdfdfd;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  background: #faf5f7;
   color: #333;
 }
-nav {
-  background: #b45f8e;
-  color: #fff;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
+
+.wrap { display: flex; min-height: 700px; }
+.panel { width: 310px; background: var(--rose-pale); padding: 16px; border-right: 1px solid var(--rose); }
+.preview { flex: 1; padding: 16px; overflow-y: auto; }
+
+.sec-head { font-family: 'Playfair Display', serif; font-size: 12px; font-weight: 600; color: var(--teal-dark); text-transform: uppercase; border-bottom: 1px solid var(--rose); margin-bottom: 6px; }
+
+.fld { display: flex; flex-direction: column; margin-bottom: 10px; }
+.lbl { font-size: 10px; text-transform: uppercase; color: var(--teal); font-weight: 500; }
+
+input[type=text], input[type=date], input[type=number], textarea {
+  border: 1px solid var(--rose); border-radius: 6px; padding: 6px 9px; font-size: 13px; background: #fff; width: 100%;
 }
-nav img { height: 40px; margin-right: 20px; }
-nav ul { list-style: none; display: flex; gap: 20px; }
-nav ul li a { color: #fff; text-decoration: none; font-weight: bold; }
-section { padding: 20px; }
-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-table, th, td { border: 1px solid #ccc; }
-th, td { padding: 10px; text-align: left; }
-button {
-  margin-top: 15px; padding: 10px 20px;
-  background: #b45f8e; color: #fff;
-  border: none; border-radius: 5px; cursor: pointer;
+
+.add-btn, .gen-btn {
+  background: var(--teal); color: #fff; border: none; border-radius: 6px; padding: 10px; cursor: pointer;
 }
-button:hover { background: #933f6d; }
+.add-btn:hover, .gen-btn:hover { background: var(--teal-dark); }
+
+.empty { text-align: center; margin-top: 80px; font-style: italic; font-size: 14px; color: #bbb; }
