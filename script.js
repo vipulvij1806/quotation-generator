@@ -1,64 +1,33 @@
-const PKGS = {
-  bridal: { label:"Bridal Package", fields:[{k:"bridalLook",l:"Bridal look",def:18000},{k:"trial",l:"Pre-bridal trial",def:5000},{k:"draping",l:"Draping",def:800}], hasQty:false },
-  hd: { label:"HD Guest Makeup", fields:[{k:"fullLook",l:"Full look (HD)",def:7500},{k:"onlyMakeup",l:"Only makeup (HD)",def:6000},{k:"hair",l:"Hairstyle",def:1500},{k:"draping",l:"Draping",def:800}], hasQty:true },
-  basic: { label:"Basic Guest Makeup", fields:[{k:"fullLook",l:"Full look (Basic)",def:4500},{k:"onlyMakeup",l:"Only makeup (Basic)",def:3000},{k:"hair",l:"Hairstyle",def:1500},{k:"draping",l:"Draping",def:800}], hasQty:true }
-};
-
-let dateCount = 0, quoteSeq = 1;
-const state = { dates: [] };
-
-function addDate() {
-  const id = 'd' + dateCount++;
-  state.dates.push({ id, events: [] });
-  renderDates();
-  addEvent(id);
+function goToPage(pageNum) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById('page' + pageNum).classList.remove('hidden');
+  if (pageNum === 4) generateSummary();
 }
 
-function addEvent(dateId) {
-  const d = state.dates.find(x => x.id === dateId);
-  if (!d) return;
-  const eid = 'e' + (Math.random()*9999|0);
-  d.events.push({ id:eid, name:'', pkgs:{} });
-  renderDates();
+function generateSummary() {
+  const name = document.getElementById('clientName').value;
+  const phone = document.getElementById('clientPhone').value;
+  const note = document.getElementById('specialNote').value;
+  const location = document.getElementById('location').value;
+
+  const events = Array.from(document.querySelectorAll('#page1 input[type=checkbox]:checked'))
+    .map(cb => cb.value);
+  const packages = Array.from(document.querySelectorAll('#page2 input[type=checkbox]:checked'))
+    .map(cb => cb.value);
+
+  let html = `<p><strong>Client:</strong> ${name}</p>
+              <p><strong>Phone:</strong> ${phone}</p>
+              <p><strong>Location:</strong> ${location}</p>
+              <p><strong>Note:</strong> ${note}</p>
+              <p><strong>Events:</strong> ${events.join(', ')}</p>
+              <p><strong>Packages:</strong> ${packages.join(', ')}</p>
+              <h3>Inclusions</h3>
+              <ul><li>Makeup</li><li>Hairstyle</li><li>Draping</li><li>Lenses</li><li>False Lashes</li></ul>
+              <h3>Exclusions</h3>
+              <ul><li>Conveyance Extra</li><li>Hair Extension: ₹1000–₹1500</li><li>Fresh Flowers</li><li>Hair Accessories</li></ul>`;
+  document.getElementById('summary').innerHTML = html;
 }
 
-function renderDates() {
-  const el = document.getElementById('datesList');
-  el.innerHTML = '';
-  state.dates.forEach((d,di) => {
-    const db = document.createElement('div');
-    db.className = 'date-block';
-    db.innerHTML = `<div class="date-head">Date ${di+1}</div>
-      <input type="date" onchange="state.dates.find(x=>x.id==='${d.id}').date=this.value" />
-      <div id="evts_${d.id}"></div>
-      <button class="add-btn" onclick="addEvent('${d.id}')">+ Add event</button>`;
-    el.appendChild(db);
-    renderEvents(d);
-  });
+function downloadPDF() {
+  window.print(); // quick export to PDF
 }
-
-function renderEvents(d) {
-  const el = document.getElementById('evts_'+d.id);
-  el.innerHTML = '';
-  d.events.forEach((ev,ei) => {
-    const eb = document.createElement('div');
-    eb.className = 'event-block';
-    eb.innerHTML = `<div class="event-head">Event ${ei+1}</div>
-      <input type="text" placeholder="e.g. Wedding" onchange="ev.name=this.value" />`;
-    el.appendChild(eb);
-  });
-}
-
-function generateQuote() {
-  const name = document.getElementById('clientName').value || 'Valued Client';
-  const phone = document.getElementById('clientPhone').value || '';
-  document.getElementById('previewArea').innerHTML = `
-    <div class="quote-wrap">
-      <h2>Quotation for ${name}</h2>
-      <p>Contact: ${phone}</p>
-      <p>Events: ${state.dates.length}</p>
-      <button onclick="window.print()">Print / Save PDF</button>
-    </div>`;
-}
-
-addDate();
