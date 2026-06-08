@@ -1,0 +1,51 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 40px;
+  background: #fdfdfd;
+  color: #333;
+}
+
+header {
+  text-align: center;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+header img {
+  max-height: 80px;
+}
+
+h1 {
+  color: #b45f8e; /* Replace with brand color */
+}
+
+section {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin: 8px 0 4px;
+  font-weight: bold;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background: #b45f8e;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover {
+  background: #933f6d;
+}
