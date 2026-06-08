@@ -1,36 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Cormorant+Garamond:wght@400;500&display=swap');
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --rose:#e8a0b0; --rose-light:#f5dde3; --rose-pale:#fdf0f3;
-  --teal:#3a7d8c; --teal-dark:#2b6070; --teal-bg:#e0f0f3;
-  --gold:#c9a96e;
+function goToPage(pageNum) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById('page' + pageNum).classList.remove('hidden');
+  if (pageNum === 4) generateSummary();
 }
 
-body {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 13px;
-  background: #faf5f7;
-  color: #333;
+function generateSummary() {
+  const name = document.getElementById('clientName').value;
+  const phone = document.getElementById('clientPhone').value;
+  const note = document.getElementById('specialNote').value;
+  const location = document.getElementById('location').value;
+
+  const events = Array.from(document.querySelectorAll('#page1 input[type=checkbox]:checked'))
+    .map(cb => cb.value);
+  const packages = Array.from(document.querySelectorAll('#page2 input[type=checkbox]:checked'))
+    .map(cb => cb.value);
+
+  let html = `<p><strong>Client:</strong> ${name}</p>
+              <p><strong>Phone:</strong> ${phone}</p>
+              <p><strong>Location:</strong> ${location}</p>
+              <p><strong>Note:</strong> ${note}</p>
+              <p><strong>Events:</strong> ${events.join(', ')}</p>
+              <p><strong>Packages:</strong> ${packages.join(', ')}</p>
+              <h3>Inclusions</h3>
+              <ul><li>Makeup</li><li>Hairstyle</li><li>Draping</li><li>Lenses</li><li>False Lashes</li></ul>
+              <h3>Exclusions</h3>
+              <ul><li>Conveyance Extra</li><li>Hair Extension: ₹1000–₹1500</li><li>Fresh Flowers</li><li>Hair Accessories</li></ul>`;
+  document.getElementById('summary').innerHTML = html;
 }
 
-.wrap { display: flex; min-height: 700px; }
-.panel { width: 310px; background: var(--rose-pale); padding: 16px; border-right: 1px solid var(--rose); }
-.preview { flex: 1; padding: 16px; overflow-y: auto; }
-
-.sec-head { font-family: 'Playfair Display', serif; font-size: 12px; font-weight: 600; color: var(--teal-dark); text-transform: uppercase; border-bottom: 1px solid var(--rose); margin-bottom: 6px; }
-
-.fld { display: flex; flex-direction: column; margin-bottom: 10px; }
-.lbl { font-size: 10px; text-transform: uppercase; color: var(--teal); font-weight: 500; }
-
-input[type=text], input[type=date], input[type=number], textarea {
-  border: 1px solid var(--rose); border-radius: 6px; padding: 6px 9px; font-size: 13px; background: #fff; width: 100%;
+function downloadPDF() {
+  window.print(); // quick export to PDF
 }
-
-.add-btn, .gen-btn {
-  background: var(--teal); color: #fff; border: none; border-radius: 6px; padding: 10px; cursor: pointer;
-}
-.add-btn:hover, .gen-btn:hover { background: var(--teal-dark); }
-
-.empty { text-align: center; margin-top: 80px; font-style: italic; font-size: 14px; color: #bbb; }
