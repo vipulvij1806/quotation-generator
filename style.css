@@ -1,33 +1,59 @@
-function goToPage(pageNum) {
-  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-  document.getElementById('page' + pageNum).classList.remove('hidden');
-  if (pageNum === 4) generateSummary();
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Cormorant+Garamond:wght@400;500&display=swap');
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background: #fff5f8;
+  color: #333;
+  margin: 0;
+  padding: 20px;
 }
 
-function generateSummary() {
-  const name = document.getElementById('clientName').value;
-  const phone = document.getElementById('clientPhone').value;
-  const note = document.getElementById('specialNote').value;
-  const location = document.getElementById('location').value;
-
-  const events = Array.from(document.querySelectorAll('#page1 input[type=checkbox]:checked'))
-    .map(cb => cb.value);
-  const packages = Array.from(document.querySelectorAll('#page2 input[type=checkbox]:checked'))
-    .map(cb => cb.value);
-
-  let html = `<p><strong>Client:</strong> ${name}</p>
-              <p><strong>Phone:</strong> ${phone}</p>
-              <p><strong>Location:</strong> ${location}</p>
-              <p><strong>Note:</strong> ${note}</p>
-              <p><strong>Events:</strong> ${events.join(', ')}</p>
-              <p><strong>Packages:</strong> ${packages.join(', ')}</p>
-              <h3>Inclusions</h3>
-              <ul><li>Makeup</li><li>Hairstyle</li><li>Draping</li><li>Lenses</li><li>False Lashes</li></ul>
-              <h3>Exclusions</h3>
-              <ul><li>Conveyance Extra</li><li>Hair Extension: ₹1000–₹1500</li><li>Fresh Flowers</li><li>Hair Accessories</li></ul>`;
-  document.getElementById('summary').innerHTML = html;
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
-function downloadPDF() {
-  window.print(); // quick export to PDF
+h2 {
+  font-family: 'Playfair Display', serif;
+  color: #b84a70;
+  margin-bottom: 20px;
+}
+
+.page { display: block; }
+.hidden { display: none; }
+
+.fld { margin-bottom: 15px; }
+label { font-weight: 500; display: block; margin-bottom: 5px; }
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e8a0b0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.checkbox-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.next-btn, .back-btn {
+  background: linear-gradient(135deg, #ffb6c1, #b84a70);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.next-btn:hover, .back-btn:hover {
+  background: linear-gradient(135deg, #b84a70, #ffb6c1);
 }
