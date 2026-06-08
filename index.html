@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Monika Makeovers Quotation</title>
+  <title>Monika Makeovers Quotation Generator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <img src="assets/logo.png" alt="Monika Makeovers Logo">
-    <h1>Quotation</h1>
-  </header>
+  <nav>
+    <img src="assets/logo.png" alt="Logo">
+    <ul>
+      <li><a href="#client">Client Details</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#preview">Preview</a></li>
+    </ul>
+  </nav>
 
-  <section class="client-details">
+  <section id="client">
     <h2>Client Details</h2>
     <label>Name</label><input type="text" id="clientName">
     <label>Date</label><input type="date" id="eventDate">
@@ -19,37 +24,35 @@
     <label>Package Inclusions</label><textarea id="packageInclusions"></textarea>
   </section>
 
-  <section class="services">
-    <h2>Services</h2>
-    <label><input type="checkbox" data-service="Bridal Base" data-rate="15000"> Bridal Package</label>
-    <label><input type="checkbox" data-service="Guest Basic" data-rate="2000"> Guest Basic</label>
-    <label><input type="checkbox" data-service="Guest HD" data-rate="3000"> Guest HD</label>
-    <label><input type="checkbox" data-service="Special Guest" data-rate="4000"> Special Guest</label>
-    <label><input type="checkbox" data-service="Close Relatives" data-rate="2500"> Close Relatives</label>
-    <label><input type="checkbox" data-service="Salon Setup" data-rate="10000"> Salon Setup</label>
-    <label><input type="checkbox" data-service="Per Artist" data-rate="5000"> Per Artist</label>
+  <section id="services">
+    <h2>Select Services</h2>
+    <label><input type="checkbox" data-service="Full Look (HD)" data-rate="7500"> Full Look (HD)</label>
+    <label><input type="checkbox" data-service="Only Makeup (HD)" data-rate="6000"> Only Makeup (HD)</label>
+    <label><input type="checkbox" data-service="Hairstyle" data-rate="1500"> Hairstyle</label>
+    <label><input type="checkbox" data-service="Draping" data-rate="800"> Draping</label>
+    <label><input type="checkbox" data-service="Makeup + Draping" data-rate="6500"> Makeup + Draping</label>
+    <label><input type="checkbox" data-service="Hair + Draping" data-rate="2000"> Hair + Draping</label>
   </section>
 
-  <section class="pricing">
+  <section id="pricing">
     <h2>Pricing</h2>
     <table id="pricingTable">
       <tr><th>Service</th><th>Rate</th><th>Quantity</th><th>Total</th></tr>
     </table>
+    <div class="totals">
+      <p>Subtotal: <span id="subtotal">0</span></p>
+      <p>Discount: <input type="number" id="discount" value="0"></p>
+      <p><strong>Grand Total: <span id="grandTotal">0</span></strong></p>
+    </div>
+    <button id="generateBtn">Generate Quotation</button>
   </section>
 
-  <div class="totals">
-    <p>Subtotal: <span id="subtotal">0</span></p>
-    <p>Discount: <input type="number" id="discount" value="0"></p>
-    <p><strong>Grand Total: <span id="grandTotal">0</span></strong></p>
-  </div>
-
-  <button onclick="window.print()">Download PDF</button>
-
-  <footer>
-    <p>Advance Payment: 50% required to confirm booking</p>
-    <p>Terms & Conditions apply | Valid for 7 days</p>
-    <p>Contact via WhatsApp / Instagram QR</p>
-  </footer>
+  <section id="preview" style="display:none;">
+    <h2>Quotation Preview</h2>
+    <div id="quotationPreview"></div>
+    <button onclick="window.print()">Download PDF</button>
+    <button id="editBtn">Go Back & Edit</button>
+  </section>
 
   <script src="script.js"></script>
 </body>
