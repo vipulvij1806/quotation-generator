@@ -1,48 +1,51 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 40px;
+  margin: 0;
   background: #fdfdfd;
   color: #333;
 }
-
-header {
-  text-align: center;
-  border-bottom: 2px solid #ccc;
-  padding-bottom: 20px;
-  margin-bottom: 30px;
+nav {
+  background: #b45f8e;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
 }
-
-header img {
-  max-height: 80px;
+nav img {
+  height: 40px;
+  margin-right: 20px;
 }
-
-h1 {
-  color: #b45f8e; /* Replace with brand color */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
 }
-
-section {
-  margin-bottom: 25px;
-}
-
-label {
-  display: block;
-  margin: 8px 0 4px;
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
   font-weight: bold;
 }
-
-input, textarea {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+section {
+  padding: 20px;
 }
-
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+table, th, td {
+  border: 1px solid #ccc;
+}
+th, td {
+  padding: 10px;
+  text-align: left;
+}
 button {
+  margin-top: 15px;
+  padding: 10px 20px;
   background: #b45f8e;
   color: #fff;
   border: none;
-  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
 }
