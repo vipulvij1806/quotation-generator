@@ -1,64 +1,91 @@
-const PKGS = {
-  bridal: { label:"Bridal Package", fields:[{k:"bridalLook",l:"Bridal look",def:18000},{k:"trial",l:"Pre-bridal trial",def:5000},{k:"draping",l:"Draping",def:800}], hasQty:false },
-  hd: { label:"HD Guest Makeup", fields:[{k:"fullLook",l:"Full look (HD)",def:7500},{k:"onlyMakeup",l:"Only makeup (HD)",def:6000},{k:"hair",l:"Hairstyle",def:1500},{k:"draping",l:"Draping",def:800}], hasQty:true },
-  basic: { label:"Basic Guest Makeup", fields:[{k:"fullLook",l:"Full look (Basic)",def:4500},{k:"onlyMakeup",l:"Only makeup (Basic)",def:3000},{k:"hair",l:"Hairstyle",def:1500},{k:"draping",l:"Draping",def:800}], hasQty:true }
-};
+document.addEventListener("DOMContentLoaded", () => {
+  const serviceCheckboxes = document.querySelectorAll("#services input[type=checkbox]");
+  const pricingTable = document.getElementById("pricingTable");
+  const subtotalEl = document.getElementById("subtotal");
+  const grandTotalEl = document.getElementById("grandTotal");
+  const discountEl = document.getElementById("discount");
+  const generateBtn = document.getElementById("generateBtn");
+  const previewSection = document.getElementById("preview");
+  const quotationPreview = document.getElementById("quotationPreview");
+  const editBtn = document.getElementById("editBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
 
-let dateCount = 0, quoteSeq = 1;
-const state = { dates: [] };
+  function updateTotals() {
+    let subtotal = 0;
+    pricingTable.querySelectorAll("tr[data-service]").forEach(row => {
+      const rate = parseFloat(row.querySelector(".rate").value) || 0;
+      const qty = parseInt(row.querySelector(".qty").value) || 0;
+      const total = rate * qty;
+      row.querySelector(".total").textContent = total.toFixed(2);
+      subtotal += total;
+    });
+    subtotalEl.textContent = subtotal.toFixed(2);
+    const discount = parseFloat(discountEl.value) || 0;
+    grandTotalEl.textContent = (subtotal - discount).toFixed(2);
+  }
 
-function addDate() {
-  const id = 'd' + dateCount++;
-  state.dates.push({ id, events: [] });
-  renderDates();
-  addEvent(id);
-}
-
-function addEvent(dateId) {
-  const d = state.dates.find(x => x.id === dateId);
-  if (!d) return;
-  const eid = 'e' + (Math.random()*9999|0);
-  d.events.push({ id:eid, name:'', pkgs:{} });
-  renderDates();
-}
-
-function renderDates() {
-  const el = document.getElementById('datesList');
-  el.innerHTML = '';
-  state.dates.forEach((d,di) => {
-    const db = document.createElement('div');
-    db.className = 'date-block';
-    db.innerHTML = `<div class="date-head">Date ${di+1}</div>
-      <input type="date" onchange="state.dates.find(x=>x.id==='${d.id}').date=this.value" />
-      <div id="evts_${d.id}"></div>
-      <button class="add-btn" onclick="addEvent('${d.id}')">+ Add event</button>`;
-    el.appendChild(db);
-    renderEvents(d);
+  serviceCheckboxes.forEach(cb => {
+    cb.addEventListener("change", () => {
+      const service = cb.dataset.service;
+      const rate = cb.dataset.rate;
+      if (cb.checked) {
+        const row = document.createElement("tr");
+        row.setAttribute("data-service", service);
+        row.innerHTML = `
+          <td>${service}</td>
+          <td><input type="number" class="rate" value="${rate}"></td>
+          <td><input type="number" class="qty" value="1"></td>
+          <td class="total">${rate}</td>
+        `;
+        pricingTable.appendChild(row);
+        row.querySelectorAll("input").forEach(input => input.addEventListener("input", updateTotals));
+      } else {
+        const row = pricingTable.querySelector(`tr[data-service="${service}"]`);
+        if (row) pricingTable.removeChild(row);
+      }
+      updateTotals();
+    });
   });
-}
 
-function renderEvents(d) {
-  const el = document.getElementById('evts_'+d.id);
-  el.innerHTML = '';
-  d.events.forEach((ev,ei) => {
-    const eb = document.createElement('div');
-    eb.className = 'event-block';
-    eb.innerHTML = `<div class="event-head">Event ${ei+1}</div>
-      <input type="text" placeholder="e.g. Wedding" onchange="ev.name=this.value" />`;
-    el.appendChild(eb);
+  discountEl.addEventListener("input", updateTotals);
+
+  generateBtn.addEventListener("click", () => {
+    const name = document.getElementById("clientName").value;
+    const date = document.getElementById("eventDate").value;
+    const location = document.getElementById("eventLocation").value;
+    const inclusions = document.getElementById("packageInclusions").value;
+
+    let html = `
+      <h2>Monika Makeovers Quotation</h2>
+      <p><strong>Client:</strong> ${name}</p>
+      <p><strong>Date:</strong> ${date}</p>
+      <p><strong>Location:</strong> ${location}</p>
+      <p><strong>Package Inclusions:</strong> ${inclusions}</p>
+      <h3>Selected Services</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr><th>Service</th><th>Rate</th><th>Quantity</th><th>Total</th></tr>
+    `;
+
+    pricingTable.querySelectorAll("tr[data-service]").forEach(row => {
+      const service = row.dataset.service;
+      const rate = row.querySelector(".rate").value;
+      const qty = row.querySelector(".qty").value;
+      const total = row.querySelector(".total").textContent;
+      html += `<tr><td>${service}</td><td>${rate}</td><td>${qty}</td><td>${total}</td></tr>`;
+    });
+
+    html += `
+      </table>
+      <p><strong>Subtotal:</strong> ${subtotalEl.textContent}</p>
+      <p><strong>Discount:</strong> ${discountEl.value}</p>
+      <p><strong>Grand Total:</strong> ${grandTotalEl.textContent}</p>
+    `;
+
+    quotationPreview.innerHTML = html;
+    previewSection.style.display = "block";
+    document.getElementById("pricing").style.display = "none";
+    document.getElementById("services").style.display = "none";
+    document.getElementById("client").style.display = "none";
   });
-}
 
-function generateQuote() {
-  const name = document.getElementById('clientName').value || 'Valued Client';
-  const phone = document.getElementById('clientPhone').value || '';
-  document.getElementById('previewArea').innerHTML = `
-    <div class="quote-wrap">
-      <h2>Quotation for ${name}</h2>
-      <p>Contact: ${phone}</p>
-      <p>Events: ${state.dates.length}</p>
-      <button onclick="window.print()">Print / Save PDF</button>
-    </div>`;
-}
-
-addDate();
+  editBtn.addEventListener
