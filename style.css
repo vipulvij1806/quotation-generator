@@ -57,11 +57,11 @@ html, body {
   border-bottom: 1px solid var(--rose);
 }
 .s-logo {
-  width: 155px;
-  height: 155px;
-  object-fit: cover;
+  width: 55px;
+  height: 55px;
+  /*object-fit: cover;*/
   border: none;
-  background: #fff;
+  background: #f9edf3;
 }
 .s-brand-name {
   font-family: 'Playfair Display', serif;
