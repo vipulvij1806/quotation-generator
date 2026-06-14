@@ -57,9 +57,8 @@ html, body {
   border-bottom: 1px solid var(--rose);
 }
 .s-logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 100%;
+  width: 55px;
+  height: 55px;
   object-fit: cover;
   border: 1.5px solid var(--rose);
   background: #fff;
