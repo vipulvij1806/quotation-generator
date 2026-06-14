@@ -513,7 +513,7 @@ function generate() {
         <div class="r-footer-social">
           <a href="${CONTACT.instagram}" target="_blank" class="social-link">📷 Instagram</a>
           <span class="footer-divider">|</span>
-          <a href="${CONTACT.wedme}" target="_blank" class="social-link">💍 WedMe</a>
+          <a href="${CONTACT.wedme}" target="_blank" class="social-link">💍 WedMeGood</a>
         </div>
         <div class="r-footer-contact">
           ${CONTACT.phone1} &nbsp;|&nbsp; ${CONTACT.phone2}
