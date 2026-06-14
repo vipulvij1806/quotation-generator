@@ -5,6 +5,7 @@
 
 /* ─── State ─────────────────────────────────────────── */
 let dateCounter = 0;
+let itemCounter = 0;
 const STATE = { dates: [] };
 
 /* ─── Initialise ────────────────────────────────────── */
@@ -65,6 +66,10 @@ function togglePkg(dateId, eventId, pk) {
     PKGS[pk].fields.forEach((f) => {
       ev.pkgs[pk][f.k] = f.d;
     });
+    // Initialize custom items array for custom package
+    if (pk === "custom") {
+      ev.pkgs[pk]["customItems"] = [];
+    }
   }
   renderSidebar();
 }
@@ -80,6 +85,47 @@ function getEvent(dateId, eventId) {
   return STATE.dates
     .find((x) => x.id === dateId)
     ?.events.find((e) => e.id === eventId);
+}
+
+/* ─── Custom item helpers ───────────────────────────── */
+function addCustomItem(dateId, eventId, pk) {
+  const ev = getEvent(dateId, eventId);
+  if (ev && ev.pkgs[pk] && pk === "custom") {
+    if (!ev.pkgs[pk]["customItems"]) {
+      ev.pkgs[pk]["customItems"] = [];
+    }
+    ev.pkgs[pk]["customItems"].push({
+      id: "ci" + itemCounter++,
+      name: "",
+      price: 0,
+      qty: 1,
+    });
+    renderSidebar();
+  }
+}
+
+function removeCustomItem(dateId, eventId, pk, itemId) {
+  const ev = getEvent(dateId, eventId);
+  if (ev && ev.pkgs[pk] && pk === "custom") {
+    ev.pkgs[pk]["customItems"] = ev.pkgs[pk]["customItems"].filter(
+      (item) => item.id !== itemId
+    );
+    renderSidebar();
+  }
+}
+
+function setCustomItemField(dateId, eventId, pk, itemId, field, value) {
+  const ev = getEvent(dateId, eventId);
+  if (ev && ev.pkgs[pk] && pk === "custom") {
+    const item = ev.pkgs[pk]["customItems"].find((ci) => ci.id === itemId);
+    if (item) {
+      if (field === "name") {
+        item.name = value;
+      } else {
+        item[field] = parseFloat(value) || 0;
+      }
+    }
+  }
 }
 
 /* ─── Sidebar renderer ──────────────────────────────── */
@@ -138,36 +184,54 @@ function buildEventBlock(dateId, ev, index) {
     opts += `<div class="opt-box">
       <div class="opt-head" style="color:${p.color}">${p.label}</div>`;
 
-    p.fields.forEach((f) => {
-      const val = pdata[f.k] !== undefined ? pdata[f.k] : f.d;
-      opts += `<div class="price-row">
-        <span class="price-lbl">${f.l}</span>
-        <input type="number" class="pi" value="${val}" min="0"
-          onchange="setField('${dateId}','${ev.id}','${k}','${f.k}',this.value)" />`;
-      if (p.qty) {
-        const q = pdata[f.k + "_q"] || 1;
-        opts += `<input type="number" class="qi" value="${q}" min="1" title="Quantity / guests"
-          onchange="setField('${dateId}','${ev.id}','${k}','${f.k}_q',this.value)" />`;
+    if (k === "custom") {
+      // Custom items section
+      const customItems = pdata["customItems"] || [];
+      customItems.forEach((item) => {
+        opts += `<div class="custom-item-row">
+          <input type="text" class="custom-name" placeholder="Item name" value="${item.name}"
+            onchange="setCustomItemField('${dateId}','${ev.id}','${k}','${item.id}','name',this.value)" />
+          <input type="number" class="custom-price" placeholder="Price" min="0" value="${item.price}"
+            onchange="setCustomItemField('${dateId}','${ev.id}','${k}','${item.id}','price',this.value)" />
+          <input type="number" class="custom-qty" placeholder="Qty" min="1" value="${item.qty}"
+            onchange="setCustomItemField('${dateId}','${ev.id}','${k}','${item.id}','qty',this.value)" />
+          <button class="item-rm-btn" onclick="removeCustomItem('${dateId}','${ev.id}','${k}','${item.id}')">×</button>
+        </div>`;
+      });
+      opts += `<button class="add-item-btn" onclick="addCustomItem('${dateId}','${ev.id}','${k}')">+ Add Item</button>`;
+    } else {
+      // Standard editable fields
+      p.fields.forEach((f) => {
+        const val = pdata[f.k] !== undefined ? pdata[f.k] : f.d;
+        opts += `<div class="price-row">
+          <span class="price-lbl">${f.l}</span>
+          <input type="number" class="pi" value="${val}" min="0"
+            onchange="setField('${dateId}','${ev.id}','${k}','${f.k}',this.value)" />`;
+        if (p.qty) {
+          const q = pdata[f.k + "_q"] || 1;
+          opts += `<input type="number" class="qi" value="${q}" min="1" title="Quantity / guests"
+            onchange="setField('${dateId}','${ev.id}','${k}','${f.k}_q',this.value)" />`;
+        }
+        opts += "</div>";
+      });
+
+      if (p.guestField) {
+        const g = pdata["guests"] || 1;
+        opts += `<div class="price-row">
+          <span class="price-lbl">No. of guests</span>
+          <input type="number" class="qi" value="${g}" min="1"
+            onchange="setField('${dateId}','${ev.id}','${k}','guests',this.value)" />
+        </div>`;
       }
-      opts += "</div>";
-    });
 
-    if (p.guestField) {
-      const g = pdata["guests"] || 1;
-      opts += `<div class="price-row">
-        <span class="price-lbl">No. of guests</span>
-        <input type="number" class="qi" value="${g}" min="1"
-          onchange="setField('${dateId}','${ev.id}','${k}','guests',this.value)" />
-      </div>`;
-    }
-
-    if (p.artistField) {
-      const a = pdata["artists"] || 1;
-      opts += `<div class="price-row">
-        <span class="price-lbl">No. of artists</span>
-        <input type="number" class="qi" value="${a}" min="1"
-          onchange="setField('${dateId}','${ev.id}','${k}','artists',this.value)" />
-      </div>`;
+      if (p.artistField) {
+        const a = pdata["artists"] || 1;
+        opts += `<div class="price-row">
+          <span class="price-lbl">No. of artists</span>
+          <input type="number" class="qi" value="${a}" min="1"
+            onchange="setField('${dateId}','${ev.id}','${k}','artists',this.value)" />
+        </div>`;
+      }
     }
 
     const disc = pdata["disc"] || 0;
@@ -204,16 +268,26 @@ function buildEventBlock(dateId, ev, index) {
 function calcPkgTotal(pk, pd) {
   const p = PKGS[pk];
   let total = 0;
-  p.fields.forEach((f) => {
-    const v = parseFloat(pd[f.k]) || 0;
-    if (p.qty) {
-      total += v * (parseInt(pd[f.k + "_q"]) || 1);
-    } else if (p.artistField && f.k === "rate") {
-      total += v * (parseInt(pd["artists"]) || 1);
-    } else {
-      total += v;
-    }
-  });
+
+  if (pk === "custom") {
+    // Calculate custom items total
+    const customItems = pd["customItems"] || [];
+    customItems.forEach((item) => {
+      total += (item.price || 0) * (item.qty || 1);
+    });
+  } else {
+    p.fields.forEach((f) => {
+      const v = parseFloat(pd[f.k]) || 0;
+      if (p.qty) {
+        total += v * (parseInt(pd[f.k + "_q"]) || 1);
+      } else if (p.artistField && f.k === "rate") {
+        total += v * (parseInt(pd["artists"]) || 1);
+      } else {
+        total += v;
+      }
+    });
+  }
+
   return Math.max(0, total - (parseFloat(pd["disc"]) || 0));
 }
 
@@ -233,7 +307,7 @@ function fmtDate(ds) {
 }
 
 /* ─── Receipt HTML builder ──────────────────────────── */
-function buildReceiptHTML(name, phone, note, qno, today) {
+function buildReceiptHTML(name, phone, location, note, qno, today) {
   let grand = 0;
   let body = "";
 
@@ -257,37 +331,54 @@ function buildReceiptHTML(name, phone, note, qno, today) {
         grand += pt;
 
         let rows = "";
-        p.fields.forEach((f) => {
-          const v = parseFloat(pd[f.k]) || 0;
-          if (!v) return;
-          if (p.qty) {
-            const q = parseInt(pd[f.k + "_q"]) || 1;
-            rows += `<tr>
-              <td>${f.l}</td>
-              <td class="td-center">${q}</td>
-              <td>₹${v.toLocaleString("en-IN")}</td>
-              <td class="td-right">₹${(v * q).toLocaleString("en-IN")}</td>
-            </tr>`;
-          } else if (p.artistField && f.k === "rate") {
-            const a = parseInt(pd["artists"]) || 1;
-            rows += `<tr>
-              <td>${f.l}</td>
-              <td class="td-center">${a} artists</td>
-              <td>₹${v.toLocaleString("en-IN")}</td>
-              <td class="td-right">₹${(v * a).toLocaleString("en-IN")}</td>
-            </tr>`;
-          } else {
-            rows += `<tr>
-              <td colspan="2">${f.l}</td>
-              <td></td>
-              <td class="td-right">₹${v.toLocaleString("en-IN")}</td>
-            </tr>`;
-          }
-        });
 
-        if (p.guestField) {
-          const g = parseInt(pd["guests"]) || 1;
-          rows += `<tr><td colspan="4" class="td-note">For ${g} guests</td></tr>`;
+        if (k === "custom") {
+          // Custom items rendering
+          const customItems = pd["customItems"] || [];
+          customItems.forEach((item) => {
+            if (item.name) {
+              const itemTotal = (item.price || 0) * (item.qty || 1);
+              rows += `<tr>
+                <td>${item.name}</td>
+                <td class="td-center">${item.qty}</td>
+                <td>₹${(item.price || 0).toLocaleString("en-IN")}</td>
+                <td class="td-right">₹${itemTotal.toLocaleString("en-IN")}</td>
+              </tr>`;
+            }
+          });
+        } else {
+          p.fields.forEach((f) => {
+            const v = parseFloat(pd[f.k]) || 0;
+            if (!v) return;
+            if (p.qty) {
+              const q = parseInt(pd[f.k + "_q"]) || 1;
+              rows += `<tr>
+                <td>${f.l}</td>
+                <td class="td-center">${q}</td>
+                <td>₹${v.toLocaleString("en-IN")}</td>
+                <td class="td-right">₹${(v * q).toLocaleString("en-IN")}</td>
+              </tr>`;
+            } else if (p.artistField && f.k === "rate") {
+              const a = parseInt(pd["artists"]) || 1;
+              rows += `<tr>
+                <td>${f.l}</td>
+                <td class="td-center">${a} artists</td>
+                <td>₹${v.toLocaleString("en-IN")}</td>
+                <td class="td-right">₹${(v * a).toLocaleString("en-IN")}</td>
+              </tr>`;
+            } else {
+              rows += `<tr>
+                <td colspan="2">${f.l}</td>
+                <td></td>
+                <td class="td-right">₹${v.toLocaleString("en-IN")}</td>
+              </tr>`;
+            }
+          });
+
+          if (p.guestField) {
+            const g = parseInt(pd["guests"]) || 1;
+            rows += `<tr><td colspan="4" class="td-note">For ${g} guests</td></tr>`;
+          }
         }
 
         const disc = parseFloat(pd["disc"]) || 0;
@@ -342,9 +433,10 @@ function buildReceiptHTML(name, phone, note, qno, today) {
 
 /* ─── Generate receipt ──────────────────────────────── */
 function generate() {
-  const name  = document.getElementById("cName").value.trim()  || "Valued Client";
-  const phone = document.getElementById("cPhone").value.trim() || "";
-  const note  = document.getElementById("cNote").value.trim()  ||
+  const name     = document.getElementById("cName").value.trim()  || "Valued Client";
+  const phone    = document.getElementById("cPhone").value.trim() || "";
+  const location = document.getElementById("cLocation").value.trim() || "";
+  const note     = document.getElementById("cNote").value.trim()  ||
     "Conveyance charges extra. False eyelashes & lenses included in HD makeup. Minimum 4–5 guests for guest packages.";
 
   if (!STATE.dates.length) {
@@ -365,7 +457,7 @@ function generate() {
   const qno = "MM-" + String(Math.floor(Math.random() * 900) + 100);
 
   const { html: body, grand, totalDates, totalEvts } = buildReceiptHTML(
-    name, phone, note, qno, today
+    name, phone, location, note, qno, today
   );
 
   const preview = document.getElementById("previewArea");
@@ -399,6 +491,7 @@ function generate() {
       <div class="r-client">
         <div class="ci"><span class="ck">Client</span><span class="cv">${name}</span></div>
         ${phone ? `<div class="ci"><span class="ck">Phone</span><span class="cv">${phone}</span></div>` : ""}
+        ${location ? `<div class="ci"><span class="ck">Location</span><span class="cv">${location}</span></div>` : ""}
         <div class="ci">
           <span class="ck">Booking</span>
           <span class="cv">${totalEvts} event${totalEvts > 1 ? "s" : ""} · ${totalDates} date${totalDates > 1 ? "s" : ""}</span>
@@ -417,6 +510,11 @@ function generate() {
       <div class="r-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
 
       <div class="r-footer">
+        <div class="r-footer-social">
+          <a href="${CONTACT.instagram}" target="_blank" class="social-link">📷 Instagram</a>
+          <span class="footer-divider">|</span>
+          <a href="${CONTACT.wedme}" target="_blank" class="social-link">💍 WedMe</a>
+        </div>
         <div class="r-footer-contact">
           ${CONTACT.phone1} &nbsp;|&nbsp; ${CONTACT.phone2}
         </div>
