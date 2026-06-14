@@ -1,79 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Monika Makeovers Quotation</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monika Makeovers – Quotation Builder</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="container">
 
-    <!-- Page 1: Client Details -->
-    <div class="page" id="page1">
-      <h2>Client Details</h2>
-      <div class="fld"><label>Client Name</label><input type="text" id="clientName"></div>
-      <div class="fld"><label>Phone</label><input type="text" id="clientPhone"></div>
-      <div class="fld"><label>Special Note</label><textarea id="specialNote"></textarea></div>
-      <div class="fld"><label>Location</label><input type="text" id="location"></div>
-      <div class="fld">
-        <label>Select Events</label>
-        <div class="checkbox-group">
-          <label><input type="checkbox" value="Mehndi"> Mehndi</label>
-          <label><input type="checkbox" value="Sangeet"> Sangeet</label>
-          <label><input type="checkbox" value="Wedding"> Wedding</label>
-          <label><input type="checkbox" value="Reception"> Reception</label>
-        </div>
+<div class="app">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR – builder controls
+  ════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="s-brand">
+      <img src="logo.png" alt="Monika Makeovers" class="s-logo" />
+      <div>
+        <div class="s-brand-name">Monika Makeovers</div>
+        <div class="s-brand-sub">Quotation Builder</div>
       </div>
-      <button class="next-btn" onclick="goToPage(2)">Next ➝</button>
     </div>
 
-    <!-- Page 2: Package Selection -->
-    <div class="page hidden" id="page2">
-      <h2>Package Selection</h2>
-      <p>Select services for HD or Basic packages:</p>
-      <div class="fld">
-        <label><input type="checkbox" value="Full Look (HD) ₹7500"> Full Look (HD)</label>
-        <label><input type="checkbox" value="Only Makeup (HD) ₹6000"> Only Makeup (HD)</label>
-        <label><input type="checkbox" value="Hairstyle ₹1500"> Hairstyle</label>
-        <label><input type="checkbox" value="Draping ₹800"> Draping</label>
-      </div>
-      <div class="fld">
-        <label><input type="checkbox" value="Full Look (Basic) ₹4500"> Full Look (Basic)</label>
-        <label><input type="checkbox" value="Only Makeup (Basic) ₹3000"> Only Makeup (Basic)</label>
-        <label><input type="checkbox" value="Hairstyle ₹1500"> Hairstyle</label>
-        <label><input type="checkbox" value="Draping ₹800"> Draping</label>
-      </div>
-      <button class="back-btn" onclick="goToPage(1)">⬅ Back</button>
-      <button class="next-btn" onclick="goToPage(3)">Next ➝</button>
+    <div class="s-section-head">Client Details</div>
+
+    <div class="field">
+      <label class="lbl" for="cName">Client Name</label>
+      <input type="text" id="cName" placeholder="e.g. Priya Sharma" />
     </div>
 
-    <!-- Page 3: Inclusions & Exclusions -->
-    <div class="page hidden" id="page3">
-      <h2>Inclusions & Exclusions</h2>
-      <h3>Inclusions</h3>
-      <ul>
-        <li>Makeup</li><li>Hairstyle</li><li>Draping</li><li>Lenses</li><li>False Lashes</li>
-      </ul>
-      <h3>Exclusions</h3>
-      <ul>
-        <li>Conveyance Extra</li>
-        <li>Hair Extension: ₹1000–₹1500</li>
-        <li>Fresh Flowers (on request)</li>
-        <li>Hair Accessories (printed price)</li>
-      </ul>
-      <button class="back-btn" onclick="goToPage(2)">⬅ Back</button>
-      <button class="next-btn" onclick="goToPage(4)">Next ➝</button>
+    <div class="field">
+      <label class="lbl" for="cPhone">Phone / WhatsApp</label>
+      <input type="text" id="cPhone" placeholder="+91 98765 43210" />
     </div>
 
-    <!-- Page 4: Summary -->
-    <div class="page hidden" id="page4">
-      <h2>Quotation Summary</h2>
-      <div id="summary"></div>
-      <button class="back-btn" onclick="goToPage(3)">⬅ Back</button>
-      <button class="next-btn" onclick="downloadPDF()">Download PDF</button>
+    <div class="field">
+      <label class="lbl" for="cNote">Note for Client</label>
+      <textarea id="cNote" rows="2" placeholder="Conveyance extra, advance, terms..."></textarea>
     </div>
 
-  </div>
-  <script src="script.js"></script>
+    <div class="s-section-head" style="margin-top:6px">Dates &amp; Events</div>
+    <div id="datesList"></div>
+    <button class="add-date-btn" onclick="addDate()">+ Add Date</button>
+
+    <button class="gen-btn" onclick="generate()">✦ Generate Quotation</button>
+
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       PREVIEW – receipt output
+  ════════════════════════════════════════ -->
+  <main class="preview" id="previewArea">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">💄</div>
+      <p>Add dates &amp; events on the left,<br />then click <em>Generate Quotation</em></p>
+    </div>
+  </main>
+
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
