@@ -60,8 +60,9 @@ html, body {
   width: 55px;
   height: 55px;
   object-fit: cover;
-  border: 1.5px solid var(--rose);
+  border: none;
   background: #fff;
+  filter: blur(40%);
 }
 .s-brand-name {
   font-family: 'Playfair Display', serif;
@@ -309,7 +310,7 @@ textarea { resize: vertical; }
 }
 .print-btn:hover { background: #1a4a57; }
 
-/* ════════════════════════════════════════════════════════
+/* ════════════════════════════════��═══════════════════════
    RECEIPT STYLES
    ════════════════════════════════════════════════════════ */
 #receipt {
@@ -355,10 +356,11 @@ textarea { resize: vertical; }
 .r-logo {
   width: 72px;
   height: 72px;
-  border-radius: 50%;
+  border-radius: 0;
   object-fit: cover;
-  border: 2px solid var(--rose);
+  border: none;
   background: #fff;
+  filter: blur(40%);
 }
 .r-meta { text-align: right; }
 .r-qno {
