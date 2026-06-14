@@ -59,7 +59,7 @@ html, body {
 .s-logo {
   width: 42px;
   height: 42px;
-  border-radius: 50%;
+  border-radius: 100%;
   object-fit: cover;
   border: 1.5px solid var(--rose);
   background: #fff;
