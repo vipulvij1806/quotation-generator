@@ -70,6 +70,24 @@ function togglePkg(dateId, eventId, pk) {
     if (pk === "custom") {
       ev.pkgs[pk]["customItems"] = [];
     }
+    // Initialize salon per guest fields
+    if (pk === "salonGuest") {
+      ev.pkgs[pk] = {
+        serviceType: "makeup_hair_draping",
+        guestCount: 1,
+        pricePerGuest: 0,
+        note: "",
+      };
+    }
+    // Initialize salon per artist fields
+    if (pk === "salonArtist") {
+      ev.pkgs[pk] = {
+        serviceType: "makeup_hair_draping",
+        artistCount: 1,
+        pricePerArtist: 0,
+        note: "",
+      };
+    }
   }
   renderSidebar();
 }
@@ -78,6 +96,36 @@ function setField(dateId, eventId, pk, fieldKey, value) {
   const ev = getEvent(dateId, eventId);
   if (ev && ev.pkgs[pk]) {
     ev.pkgs[pk][fieldKey] = parseFloat(value) || 0;
+  }
+}
+
+function setSalonGuestField(dateId, eventId, fieldKey, value) {
+  const ev = getEvent(dateId, eventId);
+  if (ev && ev.pkgs["salonGuest"]) {
+    if (fieldKey === "guestCount") {
+      ev.pkgs["salonGuest"][fieldKey] = parseInt(value) || 1;
+    } else if (fieldKey === "pricePerGuest") {
+      ev.pkgs["salonGuest"][fieldKey] = parseFloat(value) || 0;
+    } else if (fieldKey === "serviceType") {
+      ev.pkgs["salonGuest"][fieldKey] = value;
+    } else if (fieldKey === "note") {
+      ev.pkgs["salonGuest"][fieldKey] = value;
+    }
+  }
+}
+
+function setSalonArtistField(dateId, eventId, fieldKey, value) {
+  const ev = getEvent(dateId, eventId);
+  if (ev && ev.pkgs["salonArtist"]) {
+    if (fieldKey === "artistCount") {
+      ev.pkgs["salonArtist"][fieldKey] = parseInt(value) || 1;
+    } else if (fieldKey === "pricePerArtist") {
+      ev.pkgs["salonArtist"][fieldKey] = parseFloat(value) || 0;
+    } else if (fieldKey === "serviceType") {
+      ev.pkgs["salonArtist"][fieldKey] = value;
+    } else if (fieldKey === "note") {
+      ev.pkgs["salonArtist"][fieldKey] = value;
+    }
   }
 }
 
@@ -199,6 +247,80 @@ function buildEventBlock(dateId, ev, index) {
         </div>`;
       });
       opts += `<button class="add-item-btn" onclick="addCustomItem('${dateId}','${ev.id}','${k}')">+ Add Item</button>`;
+    } else if (k === "salonGuest") {
+      // Salon per guest fields
+      const st = pdata["serviceType"] || "makeup_hair_draping";
+      const gc = pdata["guestCount"] || 1;
+      const ppg = pdata["pricePerGuest"] || 0;
+      const note = pdata["note"] || "";
+      
+      opts += `<div class="price-row">
+        <span class="price-lbl">Service Type</span>
+        <select onchange="setSalonGuestField('${dateId}','${ev.id}','serviceType',this.value)">
+          <option value="makeup_hair_draping" ${st === "makeup_hair_draping" ? "selected" : ""}>Makeup, Hair & Draping</option>
+          <option value="hair_draping" ${st === "hair_draping" ? "selected" : ""}>Hair & Draping</option>
+        </select>
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl">No. of guests (approx)</span>
+        <input type="number" class="qi" value="${gc}" min="1"
+          onchange="setSalonGuestField('${dateId}','${ev.id}','guestCount',this.value)" />
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl">Price per guest (₹)</span>
+        <input type="number" class="pi" value="${ppg}" min="0"
+          onchange="setSalonGuestField('${dateId}','${ev.id}','pricePerGuest',this.value)" />
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl">Total Cost (₹)</span>
+        <input type="number" class="pi" value="${gc * ppg}" disabled />
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl discount-lbl">Discount (₹)</span>
+        <input type="number" class="pi discount-input" value="${pdata["disc"] || 0}" min="0"
+          onchange="setField('${dateId}','${ev.id}','${k}','disc',this.value)" />
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl">Note</span>
+        <textarea class="salon-note" placeholder="Add notes..." onchange="setSalonGuestField('${dateId}','${ev.id}','note',this.value)">${note}</textarea>
+      </div>`;
+    } else if (k === "salonArtist") {
+      // Salon per artist fields
+      const st = pdata["serviceType"] || "makeup_hair_draping";
+      const ac = pdata["artistCount"] || 1;
+      const ppa = pdata["pricePerArtist"] || 0;
+      const note = pdata["note"] || "";
+      
+      opts += `<div class="price-row">
+        <span class="price-lbl">Service Type</span>
+        <select onchange="setSalonArtistField('${dateId}','${ev.id}','serviceType',this.value)">
+          <option value="makeup_hair_draping" ${st === "makeup_hair_draping" ? "selected" : ""}>Makeup, Hair & Draping</option>
+          <option value="hair_draping" ${st === "hair_draping" ? "selected" : ""}>Hair & Draping</option>
+        </select>
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl">Approx no. of guests</span>
+        <input type="number" class="qi" value="${ac}" min="1"
+          onchange="setSalonArtistField('${dateId}','${ev.id}','artistCount',this.value)" />
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl">Price per artist (₹)</span>
+        <input type="number" class="pi" value="${ppa}" min="0"
+          onchange="setSalonArtistField('${dateId}','${ev.id}','pricePerArtist',this.value)" />
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl">Total Cost (₹)</span>
+        <input type="number" class="pi" value="${ac * ppa}" disabled />
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl discount-lbl">Discount (₹)</span>
+        <input type="number" class="pi discount-input" value="${pdata["disc"] || 0}" min="0"
+          onchange="setField('${dateId}','${ev.id}','${k}','disc',this.value)" />
+      </div>`;
+      opts += `<div class="price-row">
+        <span class="price-lbl">Note</span>
+        <textarea class="salon-note" placeholder="Add notes..." onchange="setSalonArtistField('${dateId}','${ev.id}','note',this.value)">${note}</textarea>
+      </div>`;
     } else {
       // Standard editable fields
       p.fields.forEach((f) => {
@@ -232,14 +354,14 @@ function buildEventBlock(dateId, ev, index) {
             onchange="setField('${dateId}','${ev.id}','${k}','artists',this.value)" />
         </div>`;
       }
-    }
 
-    const disc = pdata["disc"] || 0;
-    opts += `<div class="price-row">
-      <span class="price-lbl discount-lbl">Discount (₹)</span>
-      <input type="number" class="pi discount-input" value="${disc}" min="0"
-        onchange="setField('${dateId}','${ev.id}','${k}','disc',this.value)" />
-    </div>`;
+      const disc = pdata["disc"] || 0;
+      opts += `<div class="price-row">
+        <span class="price-lbl discount-lbl">Discount (₹)</span>
+        <input type="number" class="pi discount-input" value="${disc}" min="0"
+          onchange="setField('${dateId}','${ev.id}','${k}','disc',this.value)" />
+      </div>`;
+    }
 
     opts += "</div>"; /* end opt-box */
   });
@@ -275,6 +397,16 @@ function calcPkgTotal(pk, pd) {
     customItems.forEach((item) => {
       total += (item.price || 0) * (item.qty || 1);
     });
+  } else if (pk === "salonGuest") {
+    // Salon per guest: guestCount * pricePerGuest
+    const gc = parseInt(pd["guestCount"]) || 1;
+    const ppg = parseFloat(pd["pricePerGuest"]) || 0;
+    total = gc * ppg;
+  } else if (pk === "salonArtist") {
+    // Salon per artist: artistCount * pricePerArtist
+    const ac = parseInt(pd["artistCount"]) || 1;
+    const ppa = parseFloat(pd["pricePerArtist"]) || 0;
+    total = ac * ppa;
   } else {
     p.fields.forEach((f) => {
       const v = parseFloat(pd[f.k]) || 0;
@@ -346,6 +478,40 @@ function buildReceiptHTML(name, phone, location, note, qno, today) {
               </tr>`;
             }
           });
+        } else if (k === "salonGuest") {
+          // Salon per guest rendering
+          const serviceLabel = pd["serviceType"] === "makeup_hair_draping" ? "Makeup, Hair & Draping" : "Hair & Draping";
+          const gc = parseInt(pd["guestCount"]) || 1;
+          const ppg = parseFloat(pd["pricePerGuest"]) || 0;
+          const total = gc * ppg;
+          
+          rows += `<tr>
+            <td>${serviceLabel}</td>
+            <td class="td-center">${gc}</td>
+            <td>₹${ppg.toLocaleString("en-IN")}</td>
+            <td class="td-right">₹${total.toLocaleString("en-IN")}</td>
+          </tr>`;
+          
+          if (pd["note"]) {
+            rows += `<tr><td colspan="4" class="td-note">${pd["note"]}</td></tr>`;
+          }
+        } else if (k === "salonArtist") {
+          // Salon per artist rendering
+          const serviceLabel = pd["serviceType"] === "makeup_hair_draping" ? "Makeup, Hair & Draping" : "Hair & Draping";
+          const ac = parseInt(pd["artistCount"]) || 1;
+          const ppa = parseFloat(pd["pricePerArtist"]) || 0;
+          const total = ac * ppa;
+          
+          rows += `<tr>
+            <td>${serviceLabel}</td>
+            <td class="td-center">${ac}</td>
+            <td>₹${ppa.toLocaleString("en-IN")}</td>
+            <td class="td-right">₹${total.toLocaleString("en-IN")}</td>
+          </tr>`;
+          
+          if (pd["note"]) {
+            rows += `<tr><td colspan="4" class="td-note">${pd["note"]}</td></tr>`;
+          }
         } else {
           p.fields.forEach((f) => {
             const v = parseFloat(pd[f.k]) || 0;
