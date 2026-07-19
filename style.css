@@ -101,6 +101,7 @@ html, body {
 input[type="text"],
 input[type="date"],
 input[type="number"],
+input[type="file"],
 textarea,
 select {
   border: 1px solid var(--rose);
@@ -323,6 +324,62 @@ textarea { resize: vertical; }
 }
 .gen-btn:hover { background: var(--teal-dark); }
 
+/* ── Saved quotations section ─────────────────────────── */
+.saved-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rose);
+}
+
+.saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.saved-item {
+  background: rgba(255, 255, 255, .7);
+  border: 1px solid #f0d0da;
+  border-radius: 5px;
+  padding: 6px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 10px;
+}
+
+.saved-item-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.saved-item-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 10px;
+  transition: all .15s;
+}
+
+.saved-item-load {
+  color: var(--teal);
+  text-decoration: underline;
+}
+
+.saved-item-delete {
+  color: #c99;
+}
+
+.saved-item-load:hover { color: var(--teal-dark); }
+.saved-item-delete:hover { color: #a55; }
+
 /* ── Preview area ────────────────────────────────────── */
 .preview {
   flex: 1;
@@ -361,6 +418,42 @@ textarea { resize: vertical; }
   transition: background .2s;
 }
 .print-btn:hover { background: #1a4a57; }
+
+.filename-info {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.button-group button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.save-json-btn {
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 16px;
+  font-family: 'Playfair Display', serif;
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: .05em;
+  transition: background .2s;
+}
+
+.save-json-btn:hover { background: #b89957; }
 
 /* ════════════════════════════════════════════════════════
    RECEIPT STYLES
@@ -477,6 +570,21 @@ textarea { resize: vertical; }
   text-transform: uppercase;
   margin-bottom: 5px;
   font-weight: 600;
+}
+
+/* Package notes styling */
+.pkg-notes {
+  margin-top: 8px;
+  padding: 6px 8px;
+  background: rgba(232, 160, 176, 0.08);
+  border-left: 2px solid var(--rose);
+  font-size: 11px;
+  color: #555;
+}
+
+.pkg-note-line {
+  margin: 3px 0;
+  line-height: 1.4;
 }
 
 /* Service table */
@@ -626,6 +734,8 @@ textarea { resize: vertical; }
   /* Hide everything except the receipt */
   .sidebar,
   .print-btn,
+  .button-group,
+  .filename-info,
   .empty-state,
   .no-print {
     display: none !important;
@@ -653,6 +763,11 @@ textarea { resize: vertical; }
     border-radius: 0 !important;
     border: none !important;
     box-shadow: none !important;
+  }
+
+  /* Hide logo in print */
+  .r-logo {
+    display: none !important;
   }
 
   /* Force background colours to print */
@@ -689,6 +804,12 @@ textarea { resize: vertical; }
   .footer-divider {
     color: #f5f5f5 !important;
   }
+
+  /* Print package notes */
+  .pkg-notes {
+    background: none !important;
+    border-left: 2px solid #e8a0b0 !important;
+  }
 }
 
 /* ── Responsive (tablet / mobile) ────────────────────── */
@@ -703,6 +824,9 @@ textarea { resize: vertical; }
   }
   .preview { padding: 16px 10px; }
   .custom-item-row {
+    flex-direction: column;
+  }
+  .button-group {
     flex-direction: column;
   }
 }
